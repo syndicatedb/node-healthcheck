@@ -81,7 +81,9 @@ export default class HealthCheck {
       if (requestPath !== this.getHealthUri()) return false
       ;(async () => {
         const responseContent = await this.healthResponse(this.opts)
-        response.writeHead(this.getHttpCode(response.status), { 'Content-Type': 'application/health+json; charset=utf-8' })
+        response.writeHead(this.getHttpCode(response.status), {
+          'Content-Type': 'application/health+json; charset=utf-8',
+        })
         response.end(JSON.stringify(responseContent))
       })()
 
@@ -277,3 +279,5 @@ export default class HealthCheck {
     this.checks[foundIndex][propName] = propValue
   }
 }
+
+export * from './adapters'
