@@ -1,0 +1,15 @@
+{
+  "name": "node-healthcheck",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Igor Rozhkov <zawert23879@gmail.com> (@zawert879)",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
+}
