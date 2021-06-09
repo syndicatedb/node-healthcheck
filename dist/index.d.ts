@@ -92,4 +92,4 @@ export default class HealthCheck {
      */
     _setCheckProp(checkKey: any, propName: any, propValue: any): void;
 }
-export {};
+export * from './adapters';
