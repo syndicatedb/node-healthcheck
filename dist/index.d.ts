@@ -44,6 +44,7 @@ export default class HealthCheck {
     express(): (req: any, res: any, next: any) => Promise<any>;
     koa(): (ctx: any, next: any) => Promise<any>;
     http(): (request: any, response: any) => boolean;
+    private checkToken;
     private getHttpCode;
     /**
      * Add a new health checking routine - for a metric, on a component

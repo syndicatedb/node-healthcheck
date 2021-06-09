@@ -54,4 +54,16 @@ server.listen(3000)
 ```
 # url
 NODE_HEALTH_ENDPOINT_PATH=/.health
+
+# auth token
+HEALTH_CHECK_TOKEN=aufhhjksjdghwoaihjgkjfsdg
+
+```
+
+## auth 
+Если есть HEALTH_CHECK_TOKEN то едпоинт требует авторизации
+
+```
+header authorization
+
 ```

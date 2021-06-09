@@ -40,6 +40,10 @@ class HealthCheck {
             const requestPath = req.originalUrl;
             if (requestPath !== this.getHealthUri())
                 return next();
+            if (!this.checkToken(req.headers.authorization)) {
+                res.status(401);
+                return res.send('not authorized');
+            }
             const response = await this.healthResponse(this.opts);
             res.set('Content-Type', 'application/health+json');
             return res.status(this.getHttpCode(response.status)).send(response);
@@ -50,6 +54,10 @@ class HealthCheck {
             const requestPath = ctx.request.originalUrl;
             if (requestPath !== this.getHealthUri())
                 return next();
+            if (!this.checkToken(ctx.headers.authorization)) {
+                ctx.status = 401;
+                return (ctx.body = 'not authorized');
+            }
             const response = await this.healthResponse(this.opts);
             ctx.response.status = this.getHttpCode(response.status);
             ctx.body = response;
@@ -71,6 +79,15 @@ class HealthCheck {
             })();
             return true;
         };
+    }
+    checkToken(token) {
+        const envToken = process.env.HEALTH_CHECK_TOKEN;
+        if (envToken) {
+            if (envToken !== token) {
+                return false;
+            }
+        }
+        return true;
     }
     getHttpCode(status) {
         if (status === StatusEnum.PASS) {
