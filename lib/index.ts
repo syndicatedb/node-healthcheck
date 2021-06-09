@@ -25,7 +25,7 @@ type AdapterData = {
 type Metric = {
   metricName: string
   checkExecutor: CheckExecutor
-  opts?: any
+  opts?: Opts
 }
 type Opts = { minCacheMs?: number; path?: string }
 
