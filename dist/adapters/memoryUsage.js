@@ -5,7 +5,7 @@ const adapter = () => ({
     componentName: 'app',
     metrics: [
         {
-            metricName: 'memory usage',
+            metricName: 'memoryUsage',
             checkExecutor: () => {
                 const used = process.memoryUsage().heapUsed / 1024 / 1024;
                 return {

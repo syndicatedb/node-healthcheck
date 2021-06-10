@@ -5,7 +5,7 @@ const adapter = (opts) => ({
     componentName: opts.componentName || 'sequelize',
     metrics: [
         {
-            metricName: 'time connection',
+            metricName: 'connectionTime',
             checkExecutor: async () => {
                 try {
                     const timeS = new Date();
@@ -25,10 +25,14 @@ const adapter = (opts) => ({
             },
         },
         {
-            metricName: 'count connections',
+            metricName: 'connectionsCount',
             checkExecutor: async () => {
                 try {
-                    const response = await opts.sequelize.query(`select count(*) from pg_stat_activity where state is not null`);
+                    const response = await opts.sequelize.query(`select count(*) from pg_stat_activity where state is not null and usename = :username`, {
+                        replacements: {
+                            username: opts.sequelize.config.username,
+                        },
+                    });
                     const result = response[0][0];
                     return {
                         status: index_1.StatusEnum.PASS,

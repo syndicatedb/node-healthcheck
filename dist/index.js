@@ -45,7 +45,7 @@ class HealthCheck {
                 return res.send('not authorized');
             }
             const response = await this.healthResponse(this.opts);
-            res.set('Content-Type', 'application/health+json');
+            res.set('Content-Type', 'application/health+json; charset=utf-8');
             return res.status(this.getHttpCode(response.status)).send(response);
         };
     }
@@ -150,23 +150,23 @@ class HealthCheck {
             this._setCheckProp(key, 'lastRun', nowTs);
             this._setCheckProp(key, 'cachedValue', result);
         }
-        response.details = {};
+        response.checks = {};
         this.checks.map((check) => {
             const savedCheck = this._getCheck(check.key);
             const value = savedCheck.cachedValue;
             try {
-                response.details[check.key] = this.parseDetail(value, check.key);
+                response.checks[check.key] = this.parseDetail(value, check.key);
             }
             catch (err) {
-                response.details[check.key] = {};
-                response.details[check.key].status = StatusEnum.FAIL;
-                response.details[check.key].output = err.message;
+                response.checks[check.key] = {};
+                response.checks[check.key].status = StatusEnum.FAIL;
+                response.checks[check.key].output = err.message;
             }
-            overallStatus = this.worstStatus(overallStatus, response.details[check.key].status);
+            overallStatus = this.worstStatus(overallStatus, response.checks[check.key].status);
         });
-        if (Object.keys(response.details).length === 0) {
+        if (Object.keys(response.checks).length === 0) {
             // see: https://github.com/inadarei/maikai/issues/11
-            delete response.details;
+            delete response.checks;
         }
         response.status = overallStatus;
         return response;
@@ -220,7 +220,7 @@ class HealthCheck {
         return newObj;
     }
     isAllowedStatus(status) {
-        return ['fail', 'warn', 'pass'].includes(status);
+        return Object.keys(StatusEnum).includes(status);
     }
     /**
      * Get a check object by its key

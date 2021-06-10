@@ -1,16 +1,17 @@
 import { Adapter, StatusEnum } from '../index'
 export interface ISequelize {
-  query: (sql: string) => any
+  query: (sql: string, opts?: any) => any
+  config: { username: string }
 }
 interface IOpts {
   sequelize: ISequelize
   componentName?: string
 }
 const adapter: Adapter<IOpts> = (opts) => ({
-  componentName: opts.componentName||  'sequelize',
+  componentName: opts.componentName || 'sequelize',
   metrics: [
     {
-      metricName: 'time connection',
+      metricName: 'connectionTime',
       checkExecutor: async () => {
         try {
           const timeS = new Date()
@@ -30,10 +31,17 @@ const adapter: Adapter<IOpts> = (opts) => ({
       },
     },
     {
-      metricName: 'count connections',
+      metricName: 'connectionsCount',
       checkExecutor: async () => {
         try {
-          const response = await opts.sequelize.query(`select count(*) from pg_stat_activity where state is not null`)
+          const response = await opts.sequelize.query(
+            `select count(*) from pg_stat_activity where state is not null and usename = :username`,
+            {
+              replacements: {
+                username: opts.sequelize.config.username,
+              },
+            }
+          )
           const result = response[0][0] as any
           return {
             status: StatusEnum.PASS,
