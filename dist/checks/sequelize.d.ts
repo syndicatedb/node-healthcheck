@@ -1,4 +1,4 @@
-import { Adapter } from '../index';
+import { Check } from '../index';
 export interface ISequelize {
     query: (sql: string, opts?: any) => any;
     config: {
@@ -9,5 +9,5 @@ interface IOpts {
     sequelize: ISequelize;
     componentName?: string;
 }
-declare const adapter: Adapter<IOpts>;
+declare const adapter: Check<IOpts>;
 export default adapter;

@@ -1,6 +1,6 @@
-import { Adapter, StatusEnum } from '../index'
+import { Check, StatusEnum } from '../index'
 
-const adapter: Adapter = () => ({
+const adapter: Check = () => ({
   componentName: 'app',
   metrics: [
     {

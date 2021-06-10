@@ -110,7 +110,7 @@ class HealthCheck {
      * @param {object} opts - configuration options from the following list:
      *    - minCacheMs {integer}: min cache duration in milliseconds.
      */
-    addCheck(componentName, metricName, checkExecutor, opts = {}) {
+    add(componentName, metricName, checkExecutor, opts = {}) {
         const key = `${componentName}:${metricName}`;
         const newCheck = {};
         newCheck.key = key;
@@ -124,9 +124,9 @@ class HealthCheck {
         newCheck.minCacheMs = opts.minCacheMs || 0;
         this._addCheck(newCheck);
     }
-    addAdapter(adapter) {
-        adapter.metrics.forEach((metric) => {
-            this.addCheck(adapter.componentName, metric.metricName, metric.checkExecutor, metric.opts);
+    addCheck(check) {
+        check.metrics.forEach((metric) => {
+            this.add(check.componentName, metric.metricName, metric.checkExecutor, metric.opts);
         });
     }
     async healthResponse(opts) {
@@ -260,5 +260,5 @@ class HealthCheck {
     }
 }
 exports.default = HealthCheck;
-__exportStar(require("./adapters"), exports);
+__exportStar(require("./checks"), exports);
 //# sourceMappingURL=index.js.map

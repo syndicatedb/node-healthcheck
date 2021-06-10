@@ -5,23 +5,54 @@ import HealthCheck from 'node-healthcheck'
 const healthCheck = new HealthCheck()
 ```
 
-## addCheck
+## addCustomCheck
 
 ```js
-healthCheck.addCheck('q', 'ww', () => {
-  return {
-    status: StatusEnum.PASS,
-  }
+healthCheck.addCheck({
+  componentName: 'app',
+  metrics: [
+    {
+      metricName: 'upTime',
+      checkExecutor: () => {
+        return {
+          status: StatusEnum.PASS,
+          metricUnit: 's',
+          metricValue: process.uptime(),
+        }
+      },
+    },
+  ],
 })
 ```
 
-## addAdapter
+## addCheck
 
 ```js
-import { upTimeAdapter, memoryUsageAdapter } from 'node-healthcheck'
+import { upTime, memoryUsage } from 'node-healthcheck'
 
-healthCheck.addAdapter(upTimeAdapter())
-healthCheck.addAdapter(memoryUsageAdapter())
+healthCheck.addCheck(upTime())
+healthCheck.addCheck(memoryUsage())
+```
+## checks
+
+```js
+healthCheck.addCheck(memoryUsage())
+
+healthCheck.addCheck(upTime())
+
+healthCheck.addCheck(
+  http({
+    url: URL,
+    method: 'get',
+  })
+)
+
+healthCheck.addCheck(queue({ instanse, exchangeName: EX_NAME, queueName: QUEUE_NAME }))
+
+healthCheck.addCheck(rabbitMQ({ url: URL! }))
+
+healthCheck.addCheck(sequelize({ instanse }))
+
 ```
 
 ## koa

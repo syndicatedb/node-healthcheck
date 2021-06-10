@@ -1,4 +1,4 @@
-import { Adapter } from '../index';
+import { Check } from '../index';
 import { Method } from 'axios';
 interface IOpts {
     url: string;
@@ -7,5 +7,5 @@ interface IOpts {
     params?: any;
     componentName?: string;
 }
-declare const adapter: Adapter<IOpts>;
+declare const adapter: Check<IOpts>;
 export default adapter;

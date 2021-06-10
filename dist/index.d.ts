@@ -13,8 +13,8 @@ declare type CheckExecutorData = {
     time?: Date;
     output?: any;
 };
-export declare type Adapter<T = void> = (opts: T) => AdapterData;
-declare type AdapterData = {
+export declare type Check<T = void> = (opts: T) => CheckData;
+declare type CheckData = {
     componentName: string;
     metrics: Metric[];
 };
@@ -37,7 +37,7 @@ export default class HealthCheck {
      * 2. Env variable `NODE_HEALTH_ENDPOINT_PATH`
      * 3. Defaults to "/health"
      */
-    getHealthUri(): string;
+    private getHealthUri;
     /**
      * Middleware handler for Express.js
      */
@@ -58,39 +58,36 @@ export default class HealthCheck {
      * @param {object} opts - configuration options from the following list:
      *    - minCacheMs {integer}: min cache duration in milliseconds.
      */
-    addCheck(componentName: string, metricName: string, checkExecutor: CheckExecutor, opts?: Opts): void;
-    addAdapter(adapter: AdapterData): void;
-    healthResponse(opts: Opts): Promise<any>;
+    private add;
+    addCheck(check: CheckData): void;
+    private healthResponse;
     /**
      * Get only checks that should execute in current run, taking caching
      * instructions into consideration
      *
      */
-    getChecksForCurrentRun(): {
-        promises?: Promise<any>[] | undefined;
-        keys?: any;
-    };
-    worstStatus(one: any, two: any): StatusEnum;
-    parseDetail(rawDetails: any, prop: any): any;
-    pickAllowedValues(obj: any): any;
-    isAllowedStatus(status: StatusEnum): boolean;
+    private getChecksForCurrentRun;
+    private worstStatus;
+    private parseDetail;
+    private pickAllowedValues;
+    private isAllowedStatus;
     /**
      * Get a check object by its key
      * @param {*} key
      * @return may return undefined if a check with this key doesn't exist
      */
-    _getCheck(key: any): any;
+    private _getCheck;
     /**
      * Add a new check to the internal checks array
      * @param {*} aCheck
      */
-    _addCheck(aCheck: any): void;
+    private _addCheck;
     /**
      * Set a value of a property on an existing healthcheck
      * @param {*} aCheck
      * @param {*} propName
      * @param {*} propValue
      */
-    _setCheckProp(checkKey: any, propName: any, propValue: any): void;
+    private _setCheckProp;
 }
-export * from './adapters';
+export * from './checks';

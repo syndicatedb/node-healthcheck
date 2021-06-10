@@ -1,7 +1,7 @@
-import { Adapter } from '../index';
+import { Check } from '../index';
 interface IOpts {
     url: string;
     componentName?: string;
 }
-declare const adapter: Adapter<IOpts>;
+declare const adapter: Check<IOpts>;
 export default adapter;

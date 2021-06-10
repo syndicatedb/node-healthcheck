@@ -1,4 +1,4 @@
-import { Adapter, StatusEnum } from '../index'
+import { Check, StatusEnum } from '../index'
 export interface ISequelize {
   query: (sql: string, opts?: any) => any
   config: { username: string }
@@ -7,7 +7,7 @@ interface IOpts {
   sequelize: ISequelize
   componentName?: string
 }
-const adapter: Adapter<IOpts> = (opts) => ({
+const adapter: Check<IOpts> = (opts) => ({
   componentName: opts.componentName || 'sequelize',
   metrics: [
     {

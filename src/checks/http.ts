@@ -1,4 +1,4 @@
-import { Adapter, StatusEnum } from '../index'
+import { Check, StatusEnum } from '../index'
 import axios, { Method } from 'axios'
 
 const MAX_TIMEOUT = 4000
@@ -10,7 +10,7 @@ interface IOpts {
   componentName?: string
 }
 
-const adapter: Adapter<IOpts> = (opts) => ({
+const adapter: Check<IOpts> = (opts) => ({
   componentName: opts.componentName || 'externalApi',
   metrics: [
     {

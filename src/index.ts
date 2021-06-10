@@ -16,9 +16,9 @@ type CheckExecutorData = {
   time?: Date
   output?: any
 }
-export type Adapter<T = void> = (opts: T) => AdapterData
+export type Check<T = void> = (opts: T) => CheckData
 
-type AdapterData = {
+type CheckData = {
   componentName: string
   metrics: Metric[]
 }
@@ -42,13 +42,13 @@ export default class HealthCheck {
    * 2. Env variable `NODE_HEALTH_ENDPOINT_PATH`
    * 3. Defaults to "/health"
    */
-  getHealthUri() {
+  private getHealthUri() {
     return this.opts.path || process.env.NODE_HEALTH_ENDPOINT_PATH || DEFAULT_ENDPOINT
   }
   /**
    * Middleware handler for Express.js
    */
-  express() {
+  public express() {
     return async (req: any, res: any, next: any) => {
       const requestPath = req.originalUrl
 
@@ -64,7 +64,7 @@ export default class HealthCheck {
     }
   }
 
-  koa() {
+  public koa() {
     return async (ctx: any, next: any) => {
       const requestPath = ctx.request.originalUrl
 
@@ -83,7 +83,7 @@ export default class HealthCheck {
     }
   }
 
-  http() {
+  public http() {
     return (request: any, response: any) => {
       const requestPath = request.url
       if (requestPath !== this.getHealthUri()) return false
@@ -127,7 +127,7 @@ export default class HealthCheck {
    * @param {object} opts - configuration options from the following list:
    *    - minCacheMs {integer}: min cache duration in milliseconds.
    */
-  addCheck(componentName: string, metricName: string, checkExecutor: CheckExecutor, opts: Opts = {}) {
+  private add(componentName: string, metricName: string, checkExecutor: CheckExecutor, opts: Opts = {}) {
     const key = `${componentName}:${metricName}`
     const newCheck: any = {}
     newCheck.key = key
@@ -142,13 +142,13 @@ export default class HealthCheck {
     this._addCheck(newCheck)
   }
 
-  public addAdapter(adapter: AdapterData) {
-    adapter.metrics.forEach((metric) => {
-      this.addCheck(adapter.componentName, metric.metricName, metric.checkExecutor, metric.opts)
+  public addCheck(check: CheckData) {
+    check.metrics.forEach((metric) => {
+      this.add(check.componentName, metric.metricName, metric.checkExecutor, metric.opts)
     })
   }
 
-  async healthResponse(opts: Opts): Promise<any> {
+  private async healthResponse(opts: Opts): Promise<any> {
     const response: any = {}
     let overallStatus = StatusEnum.PASS
     response.description = process.env.npm_package_description || undefined
@@ -198,7 +198,7 @@ export default class HealthCheck {
    * instructions into consideration
    *
    */
-  getChecksForCurrentRun() {
+  private getChecksForCurrentRun() {
     const resp: {
       promises?: Promise<any>[]
       keys?: any
@@ -219,14 +219,14 @@ export default class HealthCheck {
     return resp
   }
 
-  worstStatus(one: any, two: any) {
+  private worstStatus(one: any, two: any) {
     let result = StatusEnum.PASS
     if (one === StatusEnum.WARN || two === StatusEnum.WARN) result = StatusEnum.WARN
     if (one === StatusEnum.FAIL || two === StatusEnum.FAIL) result = StatusEnum.FAIL
     return result
   }
 
-  parseDetail(rawDetails: any, prop: any) {
+  private parseDetail(rawDetails: any, prop: any) {
     const sanitized = this.pickAllowedValues(rawDetails)
     if (!sanitized.status) {
       throw new Error(`Status for ${prop} may not be missing`)
@@ -239,7 +239,7 @@ export default class HealthCheck {
     return sanitized
   }
 
-  pickAllowedValues(obj: any) {
+  private pickAllowedValues(obj: any) {
     const allowedValues = ['componentId', 'componentType', 'metricValue', 'metricUnit', 'status', 'time', 'output']
 
     const newObj: any = {}
@@ -251,7 +251,7 @@ export default class HealthCheck {
     return newObj
   }
 
-  isAllowedStatus(status: StatusEnum) {
+  private isAllowedStatus(status: StatusEnum) {
     return Object.keys(StatusEnum).includes(status)
   }
 
@@ -260,7 +260,7 @@ export default class HealthCheck {
    * @param {*} key
    * @return may return undefined if a check with this key doesn't exist
    */
-  _getCheck(key: any) {
+  private _getCheck(key: any) {
     const found = this.checks.find((el) => el.key === key)
     return found
   }
@@ -269,7 +269,7 @@ export default class HealthCheck {
    * Add a new check to the internal checks array
    * @param {*} aCheck
    */
-  _addCheck(aCheck: any) {
+  private _addCheck(aCheck: any) {
     if (!aCheck.key) {
       throw new Error('Cannot add a check with an empty key')
     }
@@ -287,7 +287,7 @@ export default class HealthCheck {
    * @param {*} propName
    * @param {*} propValue
    */
-  _setCheckProp(checkKey: any, propName: any, propValue: any) {
+  private _setCheckProp(checkKey: any, propName: any, propValue: any) {
     const foundIndex = this.checks.findIndex((el) => el.key === checkKey)
     if (foundIndex === -1) {
       throw new Error(`Cannot set a value on a check with a nonexistent key ${checkKey}`)
@@ -297,4 +297,4 @@ export default class HealthCheck {
   }
 }
 
-export * from './adapters'
+export * from './checks'

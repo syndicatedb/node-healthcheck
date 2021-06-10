@@ -1,4 +1,4 @@
-import { Adapter, StatusEnum } from '../index'
+import { Check, StatusEnum } from '../index'
 
 export interface IQueue {
   checkExchange?: (exchange: string) => Promise<any>
@@ -10,7 +10,7 @@ interface IOpts {
   exchangeName?: string
   componentName?: string
 }
-const adapter: Adapter<IOpts> = (opts) => ({
+const adapter: Check<IOpts> = (opts) => ({
   componentName: opts.componentName || 'queue',
   metrics: [
     {

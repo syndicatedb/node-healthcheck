@@ -1,10 +1,10 @@
-import { Adapter, StatusEnum } from '../index'
+import { Check, StatusEnum } from '../index'
 import * as amqp from 'amqplib'
 interface IOpts {
   url: string,
   componentName?:string
 }
-const adapter: Adapter<IOpts> = (opts) => ({
+const adapter: Check<IOpts> = (opts) => ({
   componentName: opts.componentName || 'rabbitMQ',
   metrics: [
     {
