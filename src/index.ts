@@ -252,7 +252,7 @@ export default class HealthCheck {
   }
 
   private isAllowedStatus(status: StatusEnum) {
-    return Object.keys(StatusEnum).includes(status.toUpperCase())
+    return Object.values(StatusEnum).includes(status)
   }
 
   /**

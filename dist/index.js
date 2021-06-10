@@ -220,7 +220,7 @@ class HealthCheck {
         return newObj;
     }
     isAllowedStatus(status) {
-        return Object.keys(StatusEnum).includes(status);
+        return Object.values(StatusEnum).includes(status);
     }
     /**
      * Get a check object by its key
