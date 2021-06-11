@@ -7,10 +7,10 @@ const adapter = () => ({
         {
             metricName: 'memoryUsage',
             checkExecutor: () => {
-                const used = process.memoryUsage().heapUsed / 1024 / 1024;
+                const used = process.memoryUsage().heapUsed;
                 return {
                     status: index_1.StatusEnum.PASS,
-                    metricUnit: 'MB',
+                    metricUnit: 'byte',
                     metricValue: Math.round(used * 100) / 100,
                 };
             },
