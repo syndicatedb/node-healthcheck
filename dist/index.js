@@ -155,14 +155,17 @@ class HealthCheck {
             const savedCheck = this._getCheck(check.key);
             const value = savedCheck.cachedValue;
             try {
-                response.checks[check.key] = this.parseDetail(value, check.key);
+                response.checks[check.key] = [this.parseDetail(value, check.key)];
             }
             catch (err) {
-                response.checks[check.key] = {};
-                response.checks[check.key].status = StatusEnum.FAIL;
-                response.checks[check.key].output = err.message;
+                response.checks[check.key] = [
+                    {
+                        status: StatusEnum.FAIL,
+                        output: err.message,
+                    },
+                ];
             }
-            overallStatus = this.worstStatus(overallStatus, response.checks[check.key].status);
+            overallStatus = this.worstStatus(overallStatus, response.checks[check.key][0].status);
         });
         if (Object.keys(response.checks).length === 0) {
             // see: https://github.com/inadarei/maikai/issues/11
