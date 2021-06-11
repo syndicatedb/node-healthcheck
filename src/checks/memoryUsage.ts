@@ -6,10 +6,10 @@ const adapter: Check = () => ({
     {
       metricName: 'memoryUsage',
       checkExecutor: () => {
-        const used = process.memoryUsage().heapUsed / 1024 / 1024
+        const used = process.memoryUsage().heapUsed
         return {
           status: StatusEnum.PASS,
-          metricUnit: 'MB',
+          metricUnit: 'b',
           metricValue: Math.round(used * 100) / 100,
         }
       },
