@@ -9,7 +9,7 @@ const adapter: Check = () => ({
         const used = process.memoryUsage().heapUsed
         return {
           status: StatusEnum.PASS,
-          metricUnit: 'b',
+          metricUnit: 'byte',
           metricValue: Math.round(used * 100) / 100,
         }
       },
