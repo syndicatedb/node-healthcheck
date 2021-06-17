@@ -19,6 +19,7 @@ const adapter = (opts) => ({
                         url: opts.url,
                         params: opts.params,
                         data: opts.body,
+                        headers: opts.headers
                     });
                     const timeF = new Date();
                     const timeout = timeF.getTime() - timeS.getTime();

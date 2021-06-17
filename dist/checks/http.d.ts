@@ -5,6 +5,7 @@ interface IOpts {
     method: Method;
     body?: any;
     params?: any;
+    headers?: any;
     componentName?: string;
 }
 declare const adapter: Check<IOpts>;
