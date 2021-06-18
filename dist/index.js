@@ -203,7 +203,7 @@ class HealthCheck {
         return result;
     }
     parseDetail(rawDetails, prop) {
-        const sanitized = this.pickAllowedValues(rawDetails);
+        const sanitized = this.pickAllowedValues(rawDetails, prop);
         if (!sanitized.status) {
             throw new Error(`Status for ${prop} may not be missing`);
         }
@@ -212,7 +212,7 @@ class HealthCheck {
         }
         return sanitized;
     }
-    pickAllowedValues(obj) {
+    pickAllowedValues(obj, name) {
         const allowedValues = ['componentId', 'componentType', 'metricValue', 'metricUnit', 'status', 'time', 'output'];
         const newObj = {};
         for (const prop of Object.keys(obj)) {
@@ -220,6 +220,7 @@ class HealthCheck {
                 newObj[prop] = obj[prop];
             }
         }
+        newObj.name = name;
         return newObj;
     }
     isAllowedStatus(status) {

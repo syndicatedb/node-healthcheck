@@ -230,7 +230,7 @@ export default class HealthCheck {
   }
 
   private parseDetail(rawDetails: any, prop: any) {
-    const sanitized = this.pickAllowedValues(rawDetails)
+    const sanitized = this.pickAllowedValues(rawDetails, prop)
     if (!sanitized.status) {
       throw new Error(`Status for ${prop} may not be missing`)
     }
@@ -242,7 +242,7 @@ export default class HealthCheck {
     return sanitized
   }
 
-  private pickAllowedValues(obj: any) {
+  private pickAllowedValues(obj: any, name: string) {
     const allowedValues = ['componentId', 'componentType', 'metricValue', 'metricUnit', 'status', 'time', 'output']
 
     const newObj: any = {}
@@ -251,6 +251,7 @@ export default class HealthCheck {
         newObj[prop] = obj[prop]
       }
     }
+    newObj.name = name
     return newObj
   }
 
