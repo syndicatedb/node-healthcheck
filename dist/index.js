@@ -83,7 +83,7 @@ class HealthCheck {
     checkToken(token) {
         const envToken = process.env.HEALTH_CHECK_TOKEN;
         if (envToken) {
-            if (envToken !== token) {
+            if (`Bearer ${envToken}` !== token) {
                 return false;
             }
         }
